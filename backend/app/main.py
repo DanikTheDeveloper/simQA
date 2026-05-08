@@ -71,3 +71,21 @@ def get_device_telemetry(device_id: str) -> list[Telemetry]:
         )
 
     return telemetry_store[device_id]
+
+# Client sends POST /telemetry
+
+# FastAPI receives JSON
+
+# Pydantic validates JSON against Telemetry model
+
+# Your submit_telemetry function runs
+
+# API checks device exists
+
+# API updates current device state
+
+# API appends telemetry to history
+
+# API returns 201 Created
+
+# python3 -m uvicorn app.main:app --reload
