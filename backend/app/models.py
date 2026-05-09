@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Literal
+from datetime import datetime
 
 
 DeviceType = Literal["air_handler", "vav_box", "boiler", "thermostat"]
@@ -19,3 +20,4 @@ class Telemetry(BaseModel):
     temperature: float = Field(..., ge=-50, le=120)
     humidity: float = Field(..., ge=0, le=100)
     status: DeviceStatus = "online"
+    timestamp: datetime

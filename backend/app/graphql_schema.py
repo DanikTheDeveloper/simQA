@@ -3,6 +3,7 @@ from typing import List
 import strawberry
 
 from app.storage import devices, telemetry_store
+from datetime import datetime, timezone, timedelta
 
 
 @strawberry.type
@@ -20,6 +21,7 @@ class TelemetryGraphQL:
     temperature: float
     humidity: float
     status: str
+    timestamp: str
 
 
 @strawberry.type
@@ -38,8 +40,22 @@ class Query:
         ]
 
     @strawberry.field
-    def telemetry(self, device_id: str) -> List[TelemetryGraphQL]:
+    def telemetry(
+        self,
+        device_id: str,
+        recent_minutes: int | None = None,
+    ) -> List[TelemetryGraphQL]:
+
         telemetry_data = telemetry_store.get(device_id, [])
+
+        if recent_minutes is not None:
+            cutoff = datetime.now(timezone.utc) - timedelta(minutes=recent_minutes)
+
+            telemetry_data = [
+                item
+                for item in telemetry_data
+                if item.timestamp >= cutoff
+            ]
 
         return [
             TelemetryGraphQL(
@@ -47,6 +63,7 @@ class Query:
                 temperature=item.temperature,
                 humidity=item.humidity,
                 status=item.status,
+                timestamp=item.timestamp.isoformat(),
             )
             for item in telemetry_data
         ]

@@ -22,7 +22,8 @@ def test_post_telemetry_successfully():
         "device_id": device_id,
         "temperature": 23.2,
         "humidity": 44.1,
-        "status": "online"
+        "status": "online",
+        "timestamp": "2026-01-01T12:00:00Z"
     }
 
     response = client.post("/telemetry", json=telemetry_payload)
@@ -48,7 +49,8 @@ def test_get_telemetry_for_existing_device():
         "device_id": "boiler-test-001",
         "temperature": 65.0,
         "humidity": 32.0,
-        "status": "online"
+        "status": "online",
+        "timestamp": "2026-01-01T12:00:00Z"
     }
 
     client.post("/telemetry", json=telemetry_payload)
@@ -79,7 +81,8 @@ def test_post_telemetry_rejects_missing_device_id():
     payload = {
         "temperature": 23.2,
         "humidity": 44.1,
-        "status": "online"
+        "status": "online",
+        "timestamp": "2026-01-01T12:00:00Z"
     }
 
     response = client.post("/telemetry", json=payload)
