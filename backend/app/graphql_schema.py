@@ -1,29 +1,30 @@
+from typing import List
+
 import strawberry
-from typing import List, Optional
 
 from app.storage import devices
 
 
 @strawberry.type
-class DeviceType:
+class DeviceGraphQL:
     id: str
     type: str
     status: str
-    temperature: Optional[float]
-    humidity: Optional[float]
+    temperature: float
+    humidity: float
 
 
 @strawberry.type
 class Query:
     @strawberry.field
-    def devices(self) -> List[DeviceType]:
+    def devices(self) -> List[DeviceGraphQL]:
         return [
-            DeviceType(
-                id=device["id"],
-                type=device["type"],
-                status=device["status"],
-                temperature=device.get("temperature"),
-                humidity=device.get("humidity"),
+            DeviceGraphQL(
+                id=device.id,
+                type=device.type,
+                status=device.status,
+                temperature=device.temperature,
+                humidity=device.humidity,
             )
             for device in devices.values()
         ]

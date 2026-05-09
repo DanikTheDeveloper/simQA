@@ -3,11 +3,17 @@ from fastapi import FastAPI, HTTPException, status
 from app.models import Device, Telemetry
 from app.storage import devices, telemetry_store, seed_devices
 
+from strawberry.fastapi import GraphQLRouter
+from app.graphql_schema import schema
+
 
 app = FastAPI(
     title="Building Device Simulation Platform API",
     version="0.1.0",
 )
+
+graphql_app = GraphQLRouter(schema)
+app.include_router(graphql_app, prefix="/graphql")
 
 
 @app.on_event("startup")

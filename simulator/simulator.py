@@ -2,7 +2,6 @@ import os
 import time
 import random
 import requests
-from datetime import datetime, timezone
 
 
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
@@ -18,7 +17,7 @@ DEVICES = [
     },
     {
         "id": "vav-001",
-        "type": "vav_controller",
+        "type": "vav_box    ",
         "temperature_range": (19.0, 24.0),
         "humidity_range": (30.0, 50.0),
     },
@@ -67,7 +66,6 @@ def generate_telemetry(device, counter):
         "status": status,
         "temperature": round(random.uniform(temperature_min, temperature_max), 2),
         "humidity": round(random.uniform(humidity_min, humidity_max), 2),
-        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
     # Simulate bad firmware payload every 20th message
