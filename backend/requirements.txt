@@ -3,5 +3,5 @@ uvicorn[standard]
 pydantic
 pytest
 httpx
-strawberry-graphql
+strawberry-graphql[fastapi]
 docker
