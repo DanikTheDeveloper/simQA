@@ -1,121 +1,94 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [devices, setDevices] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [lastUpdated, setLastUpdated] = useState('')
+
+  const fetchDevices = async () => {
+    setLoading(true)
+    setError('')
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/devices`)
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`)
+      }
+
+      const data = await response.json()
+      setDevices(Array.isArray(data) ? data : [])
+      setLastUpdated(new Date().toLocaleTimeString())
+    } catch (fetchError) {
+      setError(fetchError instanceof Error ? fetchError.message : 'Failed to load devices')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchDevices()
+  }, [])
+
+  const offlineDevices = useMemo(
+    () => devices.filter((device) => device.status === 'offline'),
+    [devices],
+  )
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
+    <main className="dashboard">
+      <header className="dashboard-header">
+        <h1>Building Simulation Dashboard</h1>
+        <button type="button" onClick={fetchDevices} disabled={loading}>
+          {loading ? 'Refreshing...' : 'Refresh'}
         </button>
-      </section>
+      </header>
 
-      <div className="ticks"></div>
+      {lastUpdated && <p className="meta">Last updated: {lastUpdated}</p>}
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      {error && <p className="error">Error: {error}</p>}
+
+      {offlineDevices.length > 0 && (
+        <div className="alert" role="alert">
+          Offline devices: {offlineDevices.map((device) => device.id).join(', ')}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <table>
+        <thead>
+          <tr>
+            <th>Device ID</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Latest temperature</th>
+            <th>Latest humidity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {devices.length === 0 ? (
+            <tr>
+              <td colSpan="5">No devices available.</td>
+            </tr>
+          ) : (
+            devices.map((device) => (
+              <tr key={device.id}>
+                <td>{device.id}</td>
+                <td>{device.type}</td>
+                <td>
+                  <span className={`status status-${device.status}`}>{device.status}</span>
+                </td>
+                <td>{Number(device.temperature).toFixed(1)} °C</td>
+                <td>{Number(device.humidity).toFixed(1)} %</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </main>
   )
 }
 
