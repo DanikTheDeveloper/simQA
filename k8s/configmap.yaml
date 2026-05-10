@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: building-sim-config
+  namespace: building-sim
+data:
+  BACKEND_HOST: "backend-service"
+  BACKEND_PORT: "8000"
+  API_BASE_URL: "http://backend-service:8000"
