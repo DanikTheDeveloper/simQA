@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.models import Device, Telemetry
 from app.storage import devices, telemetry_store, seed_devices
@@ -10,6 +11,17 @@ from app.graphql_schema import schema
 app = FastAPI(
     title="Building Device Simulation Platform API",
     version="0.1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 graphql_app = GraphQLRouter(schema)
@@ -77,21 +89,3 @@ def get_device_telemetry(device_id: str) -> list[Telemetry]:
         )
 
     return telemetry_store[device_id]
-
-# Client sends POST /telemetry
-
-# FastAPI receives JSON
-
-# Pydantic validates JSON against Telemetry model
-
-# Your submit_telemetry function runs
-
-# API checks device exists
-
-# API updates current device state
-
-# API appends telemetry to history
-
-# API returns 201 Created
-
-# python3 -m uvicorn app.main:app --reload
