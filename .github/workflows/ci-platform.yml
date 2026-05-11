@@ -1,16 +1,6 @@
 name: Platform QA Pipeline
 
 on:
-  push:
-    branches:
-      - develop
-      - main
-      - "feature/**"
-
-  pull_request:
-    branches:
-      - develop
-      - main
 
   workflow_dispatch:
     inputs:
