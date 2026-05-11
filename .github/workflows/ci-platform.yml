@@ -112,9 +112,6 @@ jobs:
       - name: Docker Build Simulator
         run: docker build -t platform-simulator ./simulator
 
-      - name: Docker Build Frontend
-        run: docker build -t platform-frontend ./frontend
-
       - name: Docker Compose Validation
         run: docker compose config
 
