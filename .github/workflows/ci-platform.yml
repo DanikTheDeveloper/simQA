@@ -41,6 +41,11 @@ jobs:
     runs-on: [self-hosted, X64, Linux]
 
     steps:
+      - name: Clean runner workspace permissions
+        run: |
+          sudo chown -R "$USER":"$USER" ~/actions-runner/_work || true
+          sudo chmod -R u+rwX ~/actions-runner/_work || true
+
       - uses: actions/checkout@v4
 
       - name: Verify Python
@@ -73,6 +78,11 @@ jobs:
     runs-on: [self-hosted, X64, Linux]
 
     steps:
+      - name: Clean runner workspace permissions
+        run: |
+          sudo chown -R "$USER":"$USER" ~/actions-runner/_work || true
+          sudo chmod -R u+rwX ~/actions-runner/_work || true
+
       - uses: actions/checkout@v4
 
       - name: Verify Node
@@ -99,6 +109,11 @@ jobs:
       - frontend-validation
 
     steps:
+      - name: Clean runner workspace permissions
+        run: |
+          sudo chown -R "$USER":"$USER" ~/actions-runner/_work || true
+          sudo chmod -R u+rwX ~/actions-runner/_work || true
+
       - uses: actions/checkout@v4
 
       - name: Verify Docker
@@ -123,6 +138,11 @@ jobs:
       - docker-build
 
     steps:
+      - name: Clean runner workspace permissions
+        run: |
+          sudo chown -R "$USER":"$USER" ~/actions-runner/_work || true
+          sudo chmod -R u+rwX ~/actions-runner/_work || true
+
       - uses: actions/checkout@v4
 
       - name: Clean existing containers
@@ -150,10 +170,17 @@ jobs:
   playwright-e2e:
     name: Playwright E2E Tests
     runs-on: [self-hosted, X64, Linux]
+
     needs: integration-tests
+
     if: ${{ github.event.inputs.run_e2e != 'false' }}
 
     steps:
+      - name: Clean runner workspace permissions
+        run: |
+          sudo chown -R "$USER":"$USER" ~/actions-runner/_work || true
+          sudo chmod -R u+rwX ~/actions-runner/_work || true
+
       - uses: actions/checkout@v4
 
       - name: Install frontend dependencies
@@ -193,9 +220,15 @@ jobs:
   security-scan:
     name: Security and Dependency Scan
     runs-on: [self-hosted, X64, Linux]
+
     if: ${{ github.event.inputs.run_security_scan != 'false' }}
 
     steps:
+      - name: Clean runner workspace permissions
+        run: |
+          sudo chown -R "$USER":"$USER" ~/actions-runner/_work || true
+          sudo chmod -R u+rwX ~/actions-runner/_work || true
+
       - uses: actions/checkout@v4
 
       - name: Python dependency scan
@@ -215,6 +248,11 @@ jobs:
     runs-on: [self-hosted, X64, Linux]
 
     steps:
+      - name: Clean runner workspace permissions
+        run: |
+          sudo chown -R "$USER":"$USER" ~/actions-runner/_work || true
+          sudo chmod -R u+rwX ~/actions-runner/_work || true
+
       - uses: actions/checkout@v4
 
       - name: Verify kubectl
