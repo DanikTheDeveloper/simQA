@@ -20,5 +20,6 @@ def reset_storage():
     seed_devices()
 
 
-def get_client():
+@pytest.fixture
+def client():
     return TestClient(app)

@@ -1,9 +1,4 @@
-from conftest import get_client
-
-
-def test_post_telemetry_successfully():
-    client = get_client()
-
+def test_post_telemetry_successfully(client):
     device_id = "test-vav-telemetry-999"
 
     device_payload = {
@@ -32,9 +27,7 @@ def test_post_telemetry_successfully():
     assert response.json()["message"] == "telemetry accepted"
 
 
-def test_get_telemetry_for_existing_device():
-    client = get_client()
-
+def test_get_telemetry_for_existing_device(client):
     device_payload = {
         "id": "boiler-test-001",
         "type": "boiler",
@@ -67,17 +60,13 @@ def test_get_telemetry_for_existing_device():
     assert telemetry_data[0]["temperature"] == 65.0
 
 
-def test_get_telemetry_for_unknown_device_returns_404():
-    client = get_client()
-
+def test_get_telemetry_for_unknown_device_returns_404(client):
     response = client.get("/telemetry/unknown-device")
 
     assert response.status_code == 404
 
 
-def test_post_telemetry_rejects_missing_device_id():
-    client = get_client()
-
+def test_post_telemetry_rejects_missing_device_id(client):
     payload = {
         "temperature": 23.2,
         "humidity": 44.1,

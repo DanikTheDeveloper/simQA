@@ -1,18 +1,11 @@
-from tests.conftest import get_client
-
-
-def test_get_devices_returns_list():
-    client = get_client()
-
+def test_get_devices_returns_list(client):
     response = client.get("/devices")
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
 
-def test_create_device_successfully():
-    client = get_client()
-
+def test_create_device_successfully(client):
     payload = {
         "id": "ahu-test-001",
         "type": "air_handler",
@@ -31,9 +24,7 @@ def test_create_device_successfully():
     assert any(device["id"] == "ahu-test-001" for device in devices)
 
 
-def test_create_device_rejects_missing_id():
-    client = get_client()
-
+def test_create_device_rejects_missing_id(client):
     payload = {
         "type": "air_handler",
         "status": "online",
