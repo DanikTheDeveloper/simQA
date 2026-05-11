@@ -53,7 +53,7 @@ env:
 jobs:
   backend-validation:
     name: Backend Validation
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
 
     services:
       postgres:
@@ -101,7 +101,7 @@ jobs:
 
   frontend-validation:
     name: Frontend Validation
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
 
     steps:
       - name: Checkout repository
@@ -126,7 +126,7 @@ jobs:
 
   docker-build:
     name: Docker Build and Validation
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
 
     needs:
       - backend-validation
@@ -154,7 +154,7 @@ jobs:
 
   integration-tests:
     name: Distributed Integration Tests
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
 
     needs:
       - docker-build
@@ -190,7 +190,7 @@ jobs:
 
   playwright-e2e:
     name: Playwright E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
 
     needs:
       - integration-tests
@@ -242,7 +242,7 @@ jobs:
 
   security-scan:
     name: Security and Dependency Scan
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
 
     if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_security_scan != 'false' }}
 
@@ -276,7 +276,7 @@ jobs:
 
   k8s-validation:
     name: Kubernetes Manifest Validation
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
 
     steps:
       - name: Checkout repository
@@ -291,7 +291,7 @@ jobs:
 
   pipeline-summary:
     name: Pipeline Summary
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
 
     needs:
       - backend-validation
