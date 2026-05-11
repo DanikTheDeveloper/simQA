@@ -12,16 +12,21 @@ services:
 
   simulator:
     build:
-      context: .
-      dockerfile: simulator/Dockerfile
+      context: ./simulator
+      dockerfile: Dockerfile
+
     container_name: building-sim-simulator
+
     environment:
       BACKEND_URL: http://backend:8000
       SIM_INTERVAL_SECONDS: 2
+
     volumes:
       - ./simulator:/app
+
     depends_on:
       - backend
+
     restart: unless-stopped
 
   frontend:
