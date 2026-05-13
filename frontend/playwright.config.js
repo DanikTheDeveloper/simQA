@@ -7,7 +7,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     browserName: 'chromium',
     launchOptions: {
-      executablePath: '/usr/bin/chromium-browser',
+      executablePath: '/usr/bin/chromium',
       args: ['--no-sandbox'],
     },
   },

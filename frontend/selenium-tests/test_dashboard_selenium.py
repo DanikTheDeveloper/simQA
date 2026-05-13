@@ -17,7 +17,7 @@ def driver():
     options.add_argument("--disable-dev-shm-usage")
 
     # Explicitly use installed Chromium browser
-    options.binary_location = "/usr/bin/chromium-browser"
+    options.binary_location = "/usr/bin/chromium"
 
     # Explicitly use system chromedriver
     service = Service("/usr/bin/chromedriver")
