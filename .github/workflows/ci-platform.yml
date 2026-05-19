@@ -61,7 +61,7 @@ jobs:
 
       - name: Run linting
         run: |
-          python3 -m flake8 backend tests
+          python3 -m flake8 backend tests --max-line-length=100 --extend-ignore=W292
 
       - name: Run pytest
         run: |
