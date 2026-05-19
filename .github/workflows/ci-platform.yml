@@ -114,6 +114,10 @@ jobs:
           sudo chown -R "$USER":"$USER" ~/actions-runner/_work || true
           sudo chmod -R u+rwX ~/actions-runner/_work || true
 
+      - name: Clean Docker builder cache
+        run: |
+          docker builder prune -af || true
+
       - uses: actions/checkout@v4
 
       - name: Verify Docker
@@ -122,10 +126,10 @@ jobs:
           docker compose version
 
       - name: Docker Build Backend
-        run: docker build -t platform-backend ./backend
+        run: docker build --no-cache --pull -t platform-backend ./backend
 
       - name: Docker Build Simulator
-        run: docker build -t platform-simulator ./simulator
+        run: docker build --no-cache --pull -t platform-simulator ./simulator
 
       - name: Docker Compose Validation
         run: docker compose config
