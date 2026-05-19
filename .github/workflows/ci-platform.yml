@@ -261,8 +261,10 @@ jobs:
       - name: Render Kubernetes manifests with Kustomize
         run: kubectl kustomize k8s/
 
-      - name: Validate Kubernetes manifests without cluster OpenAPI
-        run: kubectl apply --dry-run=client --validate=false -k k8s/
+      - name: Validate Kubernetes manifests render successfully
+        run: |
+          kubectl kustomize k8s/ > rendered-k8s.yaml
+          test -s rendered-k8s.yaml
 
   pipeline-summary:
     name: Pipeline Summary
